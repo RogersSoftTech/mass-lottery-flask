@@ -38,6 +38,50 @@ header {
     margin-bottom: 40px;
 }
 
+.lottery-logo {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 8px;
+    height: 75px;
+    margin-bottom: 12px;
+}
+
+.logo-ball {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 25%, #fbcfe8, #ec4899 65%, #9d174d);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-weight: 700;
+    animation: logo-bounce 1.4s ease-in-out infinite;
+}
+
+.logo-ball:nth-child(2) {
+    background: radial-gradient(circle at 30% 25%, #c7d2fe, #6366f1 65%, #3730a3);
+    animation-delay: 0.2s;
+}
+
+.logo-ball:nth-child(3) {
+    background: radial-gradient(circle at 30% 25%, #a7f3d0, #10b981 65%, #047857);
+    animation-delay: 0.4s;
+}
+
+@keyframes logo-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .logo-ball {
+        animation: none;
+    }
+}
+
 header h1 {
     font-size: 3em;
     margin-bottom: 10px;
@@ -50,6 +94,23 @@ header h1 {
 .subtitle {
     font-size: 1.1em;
     color: #cbd5e1;
+}
+
+.install-link {
+    margin-top: 12px;
+    padding: 4px;
+    border: 0;
+    background: none;
+    color: #a5b4fc;
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.install-instructions {
+    margin-top: 10px;
+    color: #cbd5e1;
+    font-size: 0.9em;
 }
 
 main {

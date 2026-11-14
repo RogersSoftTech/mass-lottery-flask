@@ -1,4 +1,14 @@
+let installPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
+    installPrompt = event;
+});
+
 document.addEventListener('DOMContentLoaded', () => {
+    const installSection = document.getElementById('install-section');
+    const installBtn = document.getElementById('install-btn');
+    const installInstructions = document.getElementById('install-instructions');
     const generateBtn = document.getElementById('generate-btn');
     const gameSelect = document.getElementById('game-select');
     const resultContainer = document.getElementById('result-container');
@@ -16,6 +26,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let lastResult = null;
 
+    document.querySelectorAll('.logo-ball').forEach(ball => {
+        ball.textContent = Math.floor(Math.random() * 69) + 1;
+        let bounces = 0;
+        ball.addEventListener('animationiteration', () => {
+            bounces += 1;
+            if (bounces % 3 !== 0) return;
+            const previous = Number(ball.textContent);
+            ball.textContent = (previous + Math.floor(Math.random() * 68)) % 69 + 1;
+        });
+    });
+
+    if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true) {
+        installSection.hidden = true;
+    }
+
+    window.addEventListener('appinstalled', () => {
+        installPrompt = null;
+        installSection.hidden = true;
+    });
+
+    installBtn.addEventListener('click', async () => {
+        if (!installPrompt) {
+            installInstructions.hidden = !installInstructions.hidden;
+            installBtn.setAttribute('aria-expanded', String(!installInstructions.hidden));
+            return;
+        }
+
+        const prompt = installPrompt;
+        installPrompt = null;
+        try {
+            await prompt.prompt();
+        } catch (error) {
+            console.error('Unable to open the install prompt:', error);
+            installInstructions.hidden = false;
+            installBtn.setAttribute('aria-expanded', 'true');
+        }
+    });
+
     generateBtn.addEventListener('click', generateNumbers);
     copyBtn.addEventListener('click', copyNumbers);
     newBtn.addEventListener('click', generateNumbers);
@@ -28,14 +76,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     async function generateNumbers() {
-        try {
-            // Show loading state
-            generateBtn.disabled = true;
-            loading.classList.remove('hidden');
-            errorMessage.classList.add('hidden');
-            resultContainer.classList.add('hidden');
+        if (generateBtn.disabled) return;
 
-            const game = gameSelect.value;
+        const game = gameSelect.value;
+        const updateNumbersOnly = lastResult && lastResult.game === game &&
+            !resultContainer.classList.contains('hidden');
+
+        try {
+            generateBtn.disabled = true;
+            newBtn.disabled = true;
+            errorMessage.classList.add('hidden');
+            if (!updateNumbersOnly) {
+                loading.classList.remove('hidden');
+                resultContainer.classList.add('hidden');
+            }
             
             // Get consecutive pairs value if checkbox is checked, otherwise 0
             let consecutivePairs = 0;
@@ -60,9 +114,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const data = await response.json();
-            lastResult = data;
 
-            displayResults(data);
+            if (updateNumbersOnly) {
+                numbersDisplay.querySelectorAll('.number-ball').forEach((ball, index) => {
+                    ball.textContent = data.numbers[index];
+                });
+                if (data.bonus) {
+                    bonusBall.textContent = data.bonus.value;
+                }
+            } else {
+                displayResults(data);
+            }
+            lastResult = data;
 
             loading.classList.add('hidden');
             resultContainer.classList.remove('hidden');
@@ -74,6 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loading.classList.add('hidden');
         } finally {
             generateBtn.disabled = false;
+            newBtn.disabled = false;
         }
     }
 
