@@ -29,6 +29,25 @@
 
             <button id="generate-btn" class="btn-generate">Generate Numbers</button>
 
+            <div class="options-section">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="consecutive-checkbox" checked>
+                    <label for="consecutive-checkbox">Include consecutive numbers</label>
+                </div>
+
+                <div class="radio-group" id="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="consecutive-pairs" value="0"> 0 pairs
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="consecutive-pairs" value="1" checked> 1 pair
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="consecutive-pairs" value="2"> 2 pairs
+                    </label>
+                </div>
+            </div>
+
             <div id="result-container" class="result-container hidden">
                 <div class="game-name" id="game-name"></div>
                 

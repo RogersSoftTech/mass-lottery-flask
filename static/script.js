@@ -10,12 +10,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const loading = document.getElementById('loading');
     const copyBtn = document.getElementById('copy-btn');
     const newBtn = document.getElementById('new-btn');
+    const consecutiveCheckbox = document.getElementById('consecutive-checkbox');
+    const radioGroup = document.getElementById('radio-group');
+    const radioButtons = document.querySelectorAll('input[name="consecutive-pairs"]');
 
     let lastResult = null;
 
     generateBtn.addEventListener('click', generateNumbers);
     copyBtn.addEventListener('click', copyNumbers);
     newBtn.addEventListener('click', generateNumbers);
+
+    // Toggle radio buttons based on checkbox
+    consecutiveCheckbox.addEventListener('change', () => {
+        radioButtons.forEach(btn => {
+            btn.disabled = !consecutiveCheckbox.checked;
+        });
+    });
 
     async function generateNumbers() {
         try {
@@ -26,12 +36,23 @@ document.addEventListener('DOMContentLoaded', () => {
             resultContainer.classList.add('hidden');
 
             const game = gameSelect.value;
+            
+            // Get consecutive pairs value if checkbox is checked, otherwise 0
+            let consecutivePairs = 0;
+            if (consecutiveCheckbox.checked) {
+                const checkedRadio = document.querySelector('input[name="consecutive-pairs"]:checked');
+                consecutivePairs = parseInt(checkedRadio.value);
+            }
+
             const response = await fetch('/api/lottery', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ game })
+                body: JSON.stringify({ 
+                    game,
+                    consecutive_pairs: consecutivePairs
+                })
             });
 
             if (!response.ok) {
