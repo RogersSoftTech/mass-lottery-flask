@@ -13,9 +13,12 @@ A simple, modern lottery number generator web application built with Python Flas
 
 ## Games Supported
 
-- **Mass Cash**: 5 numbers from 1-35
-- **Powerball**: 5 numbers from 1-69 + 1 Powerball from 1-26
 - **Mega Millions**: 5 numbers from 1-70 + 1 Megaball from 1-25
+- **Powerball**: 5 numbers from 1-69 + 1 Powerball from 1-26
+- **Megabucks**: 6 numbers from 1-44
+- **Mass Cash**: 5 numbers from 1-35
+- **Lucky For Life**: 5 numbers from 1-48 + 1 Lucky Ball from 1-18
+- **The Numbers Game**: 4 numbers from 0-9
 
 ## Tech Stack
 
@@ -72,12 +75,27 @@ Generate lottery numbers for a specific game.
 }
 ```
 
-**Response:**
+**Response (no bonus):**
 ```json
 {
   "game": "mass_cash",
   "game_name": "Mass Cash",
-  "white_numbers": [5, 12, 23, 31, 35]
+  "numbers": [5, 12, 23, 31, 35],
+  "bonus_color": "#FDB913"
+}
+```
+
+**Response (with bonus):**
+```json
+{
+  "game": "powerball",
+  "game_name": "Powerball",
+  "numbers": [5, 12, 23, 31, 35],
+  "bonus": {
+    "name": "Powerball",
+    "value": 21
+  },
+  "bonus_color": "#EB1414"
 }
 ```
 
@@ -87,9 +105,12 @@ Get list of available games.
 **Response:**
 ```json
 [
-  { "id": "mass_cash", "name": "Mass Cash" },
+  { "id": "mega_millions", "name": "Mega Millions" },
   { "id": "powerball", "name": "Powerball" },
-  { "id": "mega_millions", "name": "Mega Millions" }
+  { "id": "megabucks", "name": "Megabucks" },
+  { "id": "mass_cash", "name": "Mass Cash" },
+  { "id": "lucky_for_life", "name": "Lucky For Life" },
+  { "id": "the_numbers_game", "name": "The Numbers Game" }
 ]
 ```
 
