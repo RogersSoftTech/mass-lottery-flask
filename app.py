@@ -141,32 +141,38 @@ def generate_numbers(min_num, max_num, count, consecutive_pairs=0, allow_duplica
         # Fill remaining slots, ensuring NO new consecutive pairs are created
         remaining_needed = count - len(numbers)
         
-        # Generate a pool of valid candidates 
-        # Must not be in numbers AND must not be adjacent to ANY existing number
-        available = []
-        for n in range(min_num, max_num + 1):
-            if n not in numbers:
-                # Check if this number would create a consecutive pair with existing numbers
-                would_create_pair = any(abs(n - num) == 1 for num in numbers)
-                if not would_create_pair:
-                    available.append(n)
-        
-        # Shuffle and take from available
-        if len(available) >= remaining_needed:
-            random.shuffle(available)
-            numbers.extend(available[:remaining_needed])
-        else:
-            # Not enough non-consecutive numbers available
-            # This is rare but possible with small ranges
-            # In this case, just add the available ones
-            random.shuffle(available)
-            numbers.extend(available)
-            
-            # If still need more, take any remaining that aren't in numbers
-            # but accept they might be consecutive to something
+        if remaining_needed > 0:
+            # Generate a pool of valid candidates
+            # Must not be in numbers AND must not be adjacent to ANY existing number
+            available = []
             for n in range(min_num, max_num + 1):
-                if n not in numbers and len(numbers) < count:
-                    numbers.append(n)
+                if n not in numbers:
+                    # Check if this number would create a consecutive pair
+                    would_create_pair = any(abs(n - num) == 1 for num in numbers)
+                    if not would_create_pair:
+                        available.append(n)
+            
+            # Shuffle the available pool
+            random.shuffle(available)
+            
+            # Select from available, ensuring no consecutive pairs among selections
+            selected = []
+            for candidate in available:
+                # Check if candidate is consecutive to any already selected
+                is_consecutive_to_selected = any(abs(candidate - s) == 1 for s in selected)
+                if not is_consecutive_to_selected:
+                    selected.append(candidate)
+                    if len(selected) == remaining_needed:
+                        break
+            
+            # Add selected numbers to our final list
+            numbers.extend(selected)
+            
+            # If we still need more (edge case with very small ranges)
+            if len(numbers) < count:
+                for n in range(min_num, max_num + 1):
+                    if n not in numbers and len(numbers) < count:
+                        numbers.append(n)
         
         return sorted(numbers)
 
