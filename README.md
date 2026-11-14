@@ -60,6 +60,13 @@ A simple, modern lottery number generator web application built with Python Flas
 5. **Open in browser**
    Navigate to `http://localhost:5000`
 
+### Install as an app
+
+Open the site over HTTPS (or localhost) and select **Install App**. If your browser
+does not show an install prompt, use its menu to install the app or add it to your
+home screen. On iPhone and iPad, use Safari's Share menu and select **Add to Home
+Screen**. Number generation requires a connection to the server.
+
 ## API Endpoints
 
 ### GET /
