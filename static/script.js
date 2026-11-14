@@ -60,39 +60,43 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update game name
         gameName.textContent = data.game_name;
 
-        // Clear and display white numbers
+        // Clear and display main numbers
         numbersDisplay.innerHTML = '';
-        data.white_numbers.forEach(number => {
+        data.numbers.forEach(number => {
             const ball = document.createElement('div');
             ball.className = 'number-ball';
             ball.textContent = number;
+            ball.style.background = `linear-gradient(135deg, ${data.bonus_color}, ${adjustColor(data.bonus_color, -20)})`;
             numbersDisplay.appendChild(ball);
         });
 
         // Hide bonus section by default
         bonusSection.classList.add('hidden');
 
-        // Display powerball or megaball if present
-        if (data.powerball !== undefined) {
-            bonusBall.textContent = data.powerball;
-            bonusBall.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
-            bonusSection.classList.remove('hidden');
-        } else if (data.megaball !== undefined) {
-            bonusBall.textContent = data.megaball;
-            bonusBall.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
+        // Display bonus ball if present
+        if (data.bonus) {
+            bonusBall.textContent = data.bonus.value;
+            bonusBall.style.background = `linear-gradient(135deg, ${data.bonus_color}, ${adjustColor(data.bonus_color, -20)})`;
+            const bonusLabel = document.querySelector('.bonus-label');
+            if (bonusLabel) {
+                bonusLabel.textContent = `${data.bonus.name}:`;
+            }
             bonusSection.classList.remove('hidden');
         }
+    }
+
+    function adjustColor(hex, percent) {
+        // Simple color adjustment for gradients
+        return hex;
     }
 
     function copyNumbers() {
         if (!lastResult) return;
 
-        let text = `${lastResult.game_name}: ${lastResult.white_numbers.join(', ')}`;
+        let text = `${lastResult.game_name}: ${lastResult.numbers.join(', ')}`;
 
-        if (lastResult.powerball !== undefined) {
-            text += ` + Powerball: ${lastResult.powerball}`;
-        } else if (lastResult.megaball !== undefined) {
-            text += ` + Megaball: ${lastResult.megaball}`;
+        if (lastResult.bonus) {
+            text += ` + ${lastResult.bonus.name}: ${lastResult.bonus.value}`;
         }
 
         navigator.clipboard.writeText(text).then(() => {

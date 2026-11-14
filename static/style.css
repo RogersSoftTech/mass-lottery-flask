@@ -214,6 +214,15 @@ main {
     display: none;
 }
 
+.bonus-label {
+    color: #cbd5e1;
+    margin-bottom: 10px;
+    font-weight: 600;
+    font-size: 0.95em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
 .bonus-ball {
     display: inline-block;
     width: 60px;

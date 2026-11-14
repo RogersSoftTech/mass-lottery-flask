@@ -5,24 +5,49 @@ import random
 app = Flask(__name__)
 CORS(app)
 
-# Lottery configurations
+# Lottery configurations - all Massachusetts lottery games
 LOTTERY_CONFIGS = {
-    'powerball': {
-        'name': 'Powerball',
-        'white_balls': (1, 69),
-        'red_balls': (1, 26),
-        'count': 5
-    },
     'mega_millions': {
         'name': 'Mega Millions',
-        'white_balls': (1, 70),
-        'yellow_balls': (1, 25),
-        'count': 5
+        'numbers': (1, 70),
+        'bonus': (1, 25),
+        'bonus_name': 'Megaball',
+        'count': 5,
+        'bonus_color': '#24408F'
+    },
+    'powerball': {
+        'name': 'Powerball',
+        'numbers': (1, 69),
+        'bonus': (1, 26),
+        'bonus_name': 'Powerball',
+        'count': 5,
+        'bonus_color': '#EB1414'
+    },
+    'megabucks': {
+        'name': 'Megabucks',
+        'numbers': (1, 44),
+        'count': 6,
+        'bonus_color': '#000000'
     },
     'mass_cash': {
         'name': 'Mass Cash',
-        'white_balls': (1, 35),
-        'count': 5
+        'numbers': (1, 35),
+        'count': 5,
+        'bonus_color': '#FDB913'
+    },
+    'lucky_for_life': {
+        'name': 'Lucky For Life',
+        'numbers': (1, 48),
+        'bonus': (1, 18),
+        'bonus_name': 'Lucky Ball',
+        'count': 5,
+        'bonus_color': '#047841'
+    },
+    'the_numbers_game': {
+        'name': 'The Numbers Game',
+        'numbers': (0, 9),
+        'count': 4,
+        'bonus_color': '#FF6600'
     }
 }
 
@@ -43,23 +68,26 @@ def generate_lottery():
         
         config = LOTTERY_CONFIGS[game_type]
         
-        # Generate white ball numbers
-        white_min, white_max = config['white_balls']
-        white_numbers = sorted(random.sample(range(white_min, white_max + 1), config['count']))
+        # Generate main numbers
+        num_min, num_max = config['numbers']
+        main_numbers = sorted(random.sample(range(num_min, num_max + 1), config['count']))
         
         result = {
             'game': game_type,
             'game_name': config['name'],
-            'white_numbers': white_numbers
+            'numbers': main_numbers,
+            'bonus_color': config['bonus_color']
         }
         
-        # Generate bonus ball if applicable
-        if game_type == 'powerball':
-            red_min, red_max = config['red_balls']
-            result['powerball'] = random.randint(red_min, red_max)
-        elif game_type == 'mega_millions':
-            yellow_min, yellow_max = config['yellow_balls']
-            result['megaball'] = random.randint(yellow_min, yellow_max)
+        # Generate bonus ball if the game has one
+        if 'bonus' in config:
+            bonus_min, bonus_max = config['bonus']
+            bonus_name = config.get('bonus_name', 'Bonus Ball')
+            bonus_value = random.randint(bonus_min, bonus_max)
+            result['bonus'] = {
+                'name': bonus_name,
+                'value': bonus_value
+            }
         
         return jsonify(result)
     
