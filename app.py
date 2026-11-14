@@ -36,8 +36,8 @@ LOTTERY_CONFIGS = {
         'count': 5,
         'bonus_color': '#FDB913'
     },
-    'lucky_for_life': {
-        'name': 'Lucky For Life',
+    'millionaire_for_life': {
+        'name': 'Millionaire For Life',
         'numbers': (1, 48),
         'bonus': (1, 18),
         'bonus_name': 'Lucky Ball',
