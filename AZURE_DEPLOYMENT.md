@@ -7,9 +7,9 @@ This is a **Python Flask backend application**, not a static web app. It needs a
 | Service | Use Case |
 |---------|----------|
 | Azure Static Web Apps | ❌ NOT for this (frontend only) |
-| Azure App Service | ✅ YES (Python backend + frontend) |
-| Azure Container Instances | ✅ Also good (if containerized) |
-| Azure Functions | ❌ Not ideal (lottery generation is stateless but needs resources) |
+| Azure App Service (F1 Free) | ✅ YES - FREE tier for Python backends |
+| Azure Container Instances | ✅ Also good but more complex |
+| Azure Functions | ❌ Not ideal (lottery generation needs resources) |
 
 ---
 
@@ -24,11 +24,11 @@ az login
 # Create resource group
 az group create --name mass-lottery-rg --location eastus
 
-# Create App Service Plan (B1 = $7.50/month, free tier requires Windows)
+# Create App Service Plan (F1 = FREE tier, includes Linux support)
 az appservice plan create \
   --name mass-lottery-plan \
   --resource-group mass-lottery-rg \
-  --sku B1 \
+  --sku F1 \
   --is-linux
 
 # Create Web App for Python
@@ -43,7 +43,7 @@ Or use **Azure Portal**:
 1. Create Resource → App Service
 2. Choose **Linux** (not Windows)
 3. Python 3.11
-4. B1 pricing tier ($7.50/month)
+4. **F1 (Free)** pricing tier - $0/month ✅
 
 ### 2. Configure Startup Command in Azure Portal
 
@@ -157,10 +157,10 @@ To use your own domain instead of `.azurewebsites.net`:
 
 ## Pricing
 
-- **B1 App Service Plan**: ~$7.50/month
+- **F1 App Service Plan**: **$0/month (FREE!)** ✅
 - **Custom domain with SSL**: Free (automatic)
 - **Database (if added)**: $5-100+/month
-- **Total**: Starting at $7.50/month
+- **Total**: Starting at $0/month
 
 ---
 
@@ -203,9 +203,9 @@ az webapp log tail --resource-group mass-lottery-rg --name mass-lottery-flask
 
 ## Comparison with Firebase (Your Old Setup)
 
-| Feature | Firebase Hosting | Azure App Service |
+| Feature | Firebase Hosting | Azure App Service (F1 Free) |
 |---------|---|---|
-| Cost | $1-100+ | $7.50+ |
+| Cost | $1-100+ | $0/month |
 | Deployment | Firebase CLI | GitHub Actions |
 | Backend logic | Limited | Full Python |
 | Database | Firestore ($$$) | Much cheaper options |
